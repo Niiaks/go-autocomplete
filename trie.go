@@ -74,3 +74,24 @@ func (t *Trie) Search(w string) bool {
 	}
 	return false
 }
+
+// GetAllWords returns all words in the trie
+func (t *Trie) GetAllWords() []string {
+	words := []string{}
+	collectWords(t.root, "", &words)
+	return words
+}
+
+// Collect traverses through each child node and saves that word
+func collectWords(n *Node, currentWord string, words *[]string) {
+	// when reach a node which isEnd is true add it to the list of words
+	if n.isEnd {
+		*words = append(*words, currentWord)
+	}
+	// recursively go through each node adding it's character to the currentWord
+	for i := range n.children {
+		if n.children[i] != nil {
+			collectWords(n.children[i], currentWord+string(rune('a'+i)), words)
+		}
+	}
+}
