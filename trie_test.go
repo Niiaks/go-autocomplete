@@ -4,26 +4,39 @@ import "testing"
 
 func TestAutoComplete(t *testing.T) {
 
-	tree := InitTrie()
+	trie := InitTrie()
 	t.Run("returns true for a match", func(t *testing.T) {
-		tree.Insert("master")
+		trie.Insert("master")
 		want := true
-		got := tree.Search("master")
+		got := trie.Search("master")
 		assertCorrectMessage(t, got, want)
 	})
 
 	t.Run("returns false for no match", func(t *testing.T) {
-		tree.Insert("master")
+		trie.Insert("master")
 		want := false
-		got := tree.Search("masters")
+		got := trie.Search("masters")
 		assertCorrectMessage(t, got, want)
 	})
 
 	t.Run("normalizes input", func(t *testing.T) {
-		tree.Insert("master")
+		trie.Insert("master")
 		want := true
-		got := tree.Search("Master")
+		got := trie.Search("Master")
 		assertCorrectMessage(t, got, want)
+	})
+
+	t.Run("retrieve all words in trie", func(t *testing.T) {
+		trie.Insert("car")
+		trie.Insert("cart")
+		trie.Insert("cut")
+
+		got := trie.GetAllWords()
+		want := 3
+
+		if len(got) != want {
+			t.Errorf("want %d got %d", want, len(got))
+		}
 	})
 }
 
