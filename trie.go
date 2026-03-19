@@ -1,6 +1,8 @@
 package autocomplete
 
-import "strings"
+import (
+	"strings"
+)
 
 const AlphabetLength = 26
 
