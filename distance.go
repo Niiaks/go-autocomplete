@@ -29,7 +29,7 @@ func LevenshteinDistance(w1, w2 string) int {
 		for j := 1; j < cols; j++ {
 			cost := 0
 			if w1[i-1] != w2[j-1] {
-				cost = 1 // characters differ so substitution cost is ``
+				cost = 1 // characters differ so substitution cost is 1
 			}
 
 			deletion := matrix[i-1][j] + 1
