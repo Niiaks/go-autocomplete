@@ -28,7 +28,7 @@ func InitTrie() *Trie {
 // Insert adds a word to the trie
 func (t *Trie) Insert(w string) {
 	// normalize input for case-insensitive comparison
-	strings.TrimSpace(strings.ToLower(w))
+	w = strings.TrimSpace(strings.ToLower(w))
 
 	wl := len(w)
 	currentNode := t.root
