@@ -3,24 +3,33 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/Niiaks/go-autocomplete"
 )
 
+func loadWords(filename string) ([]string, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	words := []string{}
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		words = append(words, scanner.Text())
+	}
+	return words, nil
+}
+
 func main() {
 	trie := autocomplete.InitTrie()
 
-	// mock words for trie insertion
-	words := []string{
-		"car", "cart", "card", "care", "careful",
-		"cut", "cute", "cup", "curl",
-		"search", "searcher", "searched",
-		"go", "golang", "gopher",
-		"tree", "trie", "traverse",
-		"apple", "application", "apply",
-		"ball", "balloon", "band",
-		"cat", "catch", "category",
+	words, err := loadWords("words.txt")
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	for _, w := range words {
@@ -33,7 +42,7 @@ func main() {
 	for scanner.Scan() {
 		input := scanner.Text()
 		results := trie.FuzzySearch(input)
-		fmt.Println("suggestions ", results)
+		fmt.Fprint(os.Stdout, "suggestions ", results)
 		fmt.Print("Search: ")
 	}
 }
