@@ -13,6 +13,16 @@ type Node struct {
 
 	// isEnd marks whether this node is the last character of a stored word
 	isEnd bool
+
+	// frequency is used to determine how frequent a word has been searched
+	// for ranking purposes
+	frequency int
+}
+
+// Result helps to sort for frequency in a structured way
+type Result struct {
+	Word      string
+	Frequency int
 }
 
 // Trie represents the data structure which stores
@@ -75,18 +85,43 @@ func (t *Trie) Search(w string) bool {
 	return false
 }
 
+// IncrementFrequency increments the frequency for a word searched
+func (t *Trie) IncrementFrequency(w string) {
+	w = strings.TrimSpace(strings.ToLower(w))
+
+	wl := len(w)
+	currentNode := t.root
+
+	for i := range wl {
+		charIdx := w[i] - 'a'
+
+		if currentNode.children[charIdx] == nil {
+			return
+		}
+		// move to the next node
+		currentNode = currentNode.children[charIdx]
+	}
+	if currentNode.isEnd {
+		currentNode.frequency++
+	}
+}
+
 // GetAllWords returns all words in the trie
-func (t *Trie) GetAllWords() []string {
-	words := []string{}
+func (t *Trie) GetAllWords() []Result {
+	words := []Result{}
 	collectWords(t.root, "", &words)
 	return words
 }
 
 // Collect traverses through each child node and saves that word
-func collectWords(n *Node, currentWord string, words *[]string) {
+func collectWords(n *Node, currentWord string, words *[]Result) {
 	// when reach a node which isEnd is true add it to the list of words
 	if n.isEnd {
-		*words = append(*words, currentWord)
+		res := Result{
+			Word:      currentWord,
+			Frequency: n.frequency,
+		}
+		*words = append(*words, res)
 	}
 	// recursively go through each node adding it's character to the currentWord
 	for i := range n.children {
