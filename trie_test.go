@@ -1,6 +1,8 @@
 package autocomplete
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestAutoComplete(t *testing.T) {
 
